@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.Messaging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Networking.PushNotifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,15 +35,17 @@ namespace PushNotificationDemo.Forms.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-        }
+        }        
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // Register for Push Notifications
+            await RegisterForPushNotificationsAsync();
 
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -80,6 +87,19 @@ namespace PushNotificationDemo.Forms.UWP
             Window.Current.Activate();
         }
 
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+
+            switch (args.Kind)
+            {                
+                case ActivationKind.ToastNotification:
+                    // App got activated by notification
+                    var argument = ((ToastNotificationActivatedEventArgs)args).Argument;
+                    break;
+            }
+        }        
+
         /// <summary>
         /// Invoked when Navigation to a certain page fails
         /// </summary>
@@ -102,6 +122,21 @@ namespace PushNotificationDemo.Forms.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private async Task RegisterForPushNotificationsAsync()
+        {
+            // Create channel for Push Notifications
+            var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+
+            // Register at Azure Notification Hub and listen at created channel 
+            var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=");
+            var result = await hub.RegisterNativeAsync(channel.Uri);
+
+            if (result.RegistrationId != null)
+            {
+                Debug.WriteLine($"Registration successful: {result.RegistrationId}");
+            }
         }
     }
 }

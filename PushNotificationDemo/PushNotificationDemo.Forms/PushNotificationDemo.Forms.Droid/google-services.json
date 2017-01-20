@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "1084406049083",
+    "firebase_url": "https://pumpingcodepushdemo.firebaseio.com",
+    "project_id": "pumpingcodepushdemo",
+    "storage_bucket": "pumpingcodepushdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084406049083:android:14ca5ce09edcc04e",
+        "android_client_info": {
+          "package_name": "com.pumpingcode.pushnotificationdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084406049083-iek7v16u84021daj8jro80kls9hpd1ml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
