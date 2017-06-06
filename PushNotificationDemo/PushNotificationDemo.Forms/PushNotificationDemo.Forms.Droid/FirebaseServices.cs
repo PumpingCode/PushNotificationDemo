@@ -34,14 +34,20 @@ namespace FirebaseServices
 
 			// Register token at Azure Notification Hub
 			var result = hub.Register(refreshedToken);
-			if (result != null)
-			{
-				Debug.WriteLine($"Registration successful: {result.RegistrationId}");
-			}
-		}
-	}
 
-	[Service]
+            hub.Register(refreshedToken, "userId:PETER");
+
+			if (result != null)
+                SendRegistrationToAppServer(result.RegistrationId);
+		}
+
+        private void SendRegistrationToAppServer(string registrationId)
+        {
+            // Add custom implementation to send the registration Id to your backend if needed
+        }
+    }
+
+    [Service]
 	[IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
 	public class MyFirebaseMessagingService : FirebaseMessagingService
 	{

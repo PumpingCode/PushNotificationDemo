@@ -31,15 +31,15 @@ namespace PushNotificationDemo.Forms.Droid
 				var message = (RemoteMessage)Intent.Extras.Get("message");
 				if (message != null)
 				{
-					// App got activated by notification            
+					// App got activated by notification
 					// Do your stuff...
 				}
 			}
 
-			// Check, if Google Play Services are available, that are mandatory for Google Firebase Push
-			if (GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this) != ConnectionResult.Success)
-				System.Diagnostics.Debug.WriteLine($"Google Play Services are not available for this devie");
-			
+            // Check, if Google Play Services are available, that are mandatory for Google Firebase Push
+            if (GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this) != ConnectionResult.Success)
+	            System.Diagnostics.Debug.WriteLine($"Google Play Services are not available for this devie");
+
 			// Initialize Xamarin.Forms
 		    global::Xamarin.Forms.Forms.Init(this, bundle);
 		    LoadApplication(new App());

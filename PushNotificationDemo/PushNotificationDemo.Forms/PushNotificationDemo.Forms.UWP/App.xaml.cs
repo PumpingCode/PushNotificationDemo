@@ -35,7 +35,7 @@ namespace PushNotificationDemo.Forms.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-        }        
+        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -92,13 +92,13 @@ namespace PushNotificationDemo.Forms.UWP
             base.OnActivated(args);
 
             switch (args.Kind)
-            {                
+            {
                 case ActivationKind.ToastNotification:
                     // App got activated by notification
                     var argument = ((ToastNotificationActivatedEventArgs)args).Argument;
                     break;
             }
-        }        
+        }
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails
@@ -129,14 +129,18 @@ namespace PushNotificationDemo.Forms.UWP
             // Create channel for Push Notifications
             var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 
-            // Register at Azure Notification Hub and listen at created channel 
+            // Register at Azure Notification Hub and listen at created channel
             var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=");
-            var result = await hub.RegisterNativeAsync(channel.Uri);
+            //var result = await hub.RegisterNativeAsync(channel.Uri);
+            var result = await hub.RegisterNativeAsync(channel.Uri, new List<string> { "userId:PETER" });
 
             if (result.RegistrationId != null)
-            {
-                Debug.WriteLine($"Registration successful: {result.RegistrationId}");
-            }
+                SendRegistrationToAppServer(result.RegistrationId);
+        }
+
+        private void SendRegistrationToAppServer(string registrationId)
+        {
+            // Add custom implementation to send the registration Id to your backend if needed
         }
     }
 }
