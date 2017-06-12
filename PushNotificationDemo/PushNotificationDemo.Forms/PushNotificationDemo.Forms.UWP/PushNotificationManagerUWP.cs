@@ -22,17 +22,17 @@ namespace PushNotificationDemo.Forms.UWP
 
         }
 
-        public async void RegisterDeviceForUser(string userId)
+        public async Task RegisterDeviceForUserAsync(string userId)
         {
             // Get WNS token from preferences            
             if (localSettings.Values.ContainsKey("WindowsNotificationChannelUri"))
             {
                 var channelUri = (string)localSettings.Values["WindowsNotificationChannelUri"];
 
-                // Unregister all previous users with this token
+                // Unregister all previous devices with this token
                 await notificationHub.UnregisterAllAsync(channelUri);
 
-                // Register user
+                // Register this device's token with the userId tag
                 var registration = await notificationHub.RegisterNativeAsync(channelUri, new List<string> { "userId:" + userId });
             }
         }

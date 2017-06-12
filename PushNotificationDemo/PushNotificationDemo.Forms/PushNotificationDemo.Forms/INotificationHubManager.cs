@@ -8,6 +8,6 @@ namespace PushNotificationDemo.Forms
 {
     public interface INotificationHubManager
     {
-        void RegisterDeviceForUser(string userId);
+        Task RegisterDeviceForUserAsync(string userId);
     }
 }

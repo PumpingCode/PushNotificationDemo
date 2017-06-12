@@ -12,6 +12,7 @@ using Android.Widget;
 using WindowsAzure.Messaging;
 using Android.Preferences;
 using PushNotificationDemo.Forms.Droid;
+using System.Threading;
 
 [assembly: Xamarin.Forms.Dependency(typeof(NotificationHubManagerDroid))]
 namespace PushNotificationDemo.Forms.Droid
@@ -28,17 +29,20 @@ namespace PushNotificationDemo.Forms.Droid
 
         }
 
-        public void RegisterDeviceForUser(string userId)
+        public async Task RegisterDeviceForUserAsync(string userId)
         {
             // Get Firebase Token from preferences
             var token = sharedPreferences.GetString("FirebaseInstanceToken", null);
             if (token != null)
             {
-                // Unregister all previous users with this token
-                notificationHub.UnregisterAll(token);
+                await Task.Run(() =>
+                {
+                    // Unregister all previous devices with this token
+                    notificationHub.UnregisterAll(token);
 
-                // Register user
-                var registration = notificationHub.Register(token, "userId:" + userId);
+                    // Register this device's token with the userId tag
+                    notificationHub.Register(token, "userId:" + userId);
+                });
             }
         }
     }
