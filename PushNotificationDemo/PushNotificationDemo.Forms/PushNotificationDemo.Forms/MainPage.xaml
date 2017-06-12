@@ -3,5 +3,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="PushNotificationDemo.Forms.MainPage">
-    <Label Text="Push Notification Demo" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Padding="20">
+        <Entry x:Name="UserIdEntry" Placeholder="User ID" />
+        <Button x:Name="RegisterButton" Text="Register" Clicked="RegisterButton_Clicked" />
+    </StackLayout>
 </ContentPage>

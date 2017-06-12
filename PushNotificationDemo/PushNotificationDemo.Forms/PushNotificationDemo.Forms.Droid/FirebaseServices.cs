@@ -16,16 +16,16 @@ namespace FirebaseServices
 	{
 		public override void OnTokenRefresh()
 		{
-			var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=", this);
+			//var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=", this);
 			var sharedPreferences = PreferenceManager.GetDefaultSharedPreferences(this);
 
 			// Get Firebase Instance Token
 			var refreshedToken = FirebaseInstanceId.Instance.Token;
 
 			// Check, if a Firebase Instance Token has been registered before and unregister it
-			var oldToken = sharedPreferences.GetString("FirebaseInstanceToken", null);
-			if (oldToken != null)
-				hub.UnregisterAll(oldToken);
+			//var oldToken = sharedPreferences.GetString("FirebaseInstanceToken", null);
+			//if (oldToken != null)
+			//	hub.UnregisterAll(oldToken);
 
 			// Save the Firebase Instance Token locally
 			var sharedPreferencesEditor = sharedPreferences.Edit();
@@ -33,12 +33,12 @@ namespace FirebaseServices
 			sharedPreferencesEditor.Commit();
 
 			// Register token at Azure Notification Hub
-			var result = hub.Register(refreshedToken);
+			//var result = hub.Register(refreshedToken);
 
-            hub.Register(refreshedToken, "userId:PETER");
+            //hub.Register(refreshedToken, "userId:PETER");
 
-			if (result != null)
-                SendRegistrationToAppServer(result.RegistrationId);
+			//if (result != null)
+   //             SendRegistrationToAppServer(result.RegistrationId);
 		}
 
         private void SendRegistrationToAppServer(string registrationId)

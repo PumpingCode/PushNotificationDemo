@@ -14,5 +14,15 @@ namespace PushNotificationDemo.Forms
         {
             InitializeComponent();
         }
+
+        private void RegisterButton_Clicked(object sender, EventArgs e)
+        {
+            var pushNotificationManager = DependencyService.Get<INotificationHubManager>();
+            if (pushNotificationManager != null)
+            {
+
+                pushNotificationManager.RegisterDeviceForUser(UserIdEntry.Text);
+            }
+        }
     }
 }

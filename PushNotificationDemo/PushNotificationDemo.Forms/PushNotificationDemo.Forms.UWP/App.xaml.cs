@@ -129,13 +129,22 @@ namespace PushNotificationDemo.Forms.UWP
             // Create channel for Push Notifications
             var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 
-            // Register at Azure Notification Hub and listen at created channel
-            var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=");
-            //var result = await hub.RegisterNativeAsync(channel.Uri);
-            var result = await hub.RegisterNativeAsync(channel.Uri, new List<string> { "userId:PETER" });
+            //
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey("WindowsNotificationChannelUri"))
+                localSettings.Values["WindowsNotificationChannelUri"] = channel.Uri;
+            else
+                localSettings.Values.Add("WindowsNotificationChannelUri", channel.Uri);
 
-            if (result.RegistrationId != null)
-                SendRegistrationToAppServer(result.RegistrationId);
+
+
+            // Register at Azure Notification Hub and listen at created channel
+            //var hub = new NotificationHub("PumpingCodeNotificationHub", "Endpoint=sb://pumpingcodedemo.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+vU1I+8GGdPct3fANW5XbP03iC9Txe+/muGxUHe3e7g=");
+            //var result = await hub.RegisterNativeAsync(channel.Uri);
+            //var result = await hub.RegisterNativeAsync(channel.Uri, new List<string> { "userId:PETER" });
+
+            //if (result.RegistrationId != null)
+            //    SendRegistrationToAppServer(result.RegistrationId);
         }
 
         private void SendRegistrationToAppServer(string registrationId)
