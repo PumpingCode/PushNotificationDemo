@@ -35,10 +35,7 @@ namespace PushNotificationDemo.Forms.iOS
         {
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
-                var pushSettings = UIUserNotificationSettings.GetSettingsForTypes(
-                       UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
-                       new NSSet());
-
+                var pushSettings = UIUserNotificationSettings.GetSettingsForTypes(UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, new NSSet());
                 UIApplication.SharedApplication.RegisterUserNotificationSettings(pushSettings);
                 UIApplication.SharedApplication.RegisterForRemoteNotifications();
             }
@@ -51,8 +48,6 @@ namespace PushNotificationDemo.Forms.iOS
 
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
-            //base.RegisteredForRemoteNotifications(application, deviceToken);
-
             NSUserDefaults.StandardUserDefaults.SetValueForKey(deviceToken, new NSString("ApnsToken"));
             NSUserDefaults.StandardUserDefaults.Synchronize();
         }
@@ -77,17 +72,26 @@ namespace PushNotificationDemo.Forms.iOS
                 if (aps.ContainsKey(new NSString("alert")))
                     alert = (aps[new NSString("alert")] as NSString).ToString();
 
-                //If this came from the ReceivedRemoteNotification while the app was running,
-                // we of course need to manually process things like the sound, badge, and alert.
-                //if (!fromFinishedLaunching)
-                //{
-                //Manually show an alert
-                if (!string.IsNullOrEmpty(alert))
+
+                // Differ between the state of the current application, when it receives the push notification
+                switch (application.ApplicationState)
                 {
-                    UIAlertView avAlert = new UIAlertView("Notification", alert, null, "OK", null);
-                    avAlert.Show();
+                    // App is running in the foreground and notification will get depressed
+                    // We have to handle the notification on our own
+                    case UIApplicationState.Active:
+                        if (!string.IsNullOrEmpty(alert))
+                        {
+                            // Manually show an alert
+                            var alertView = new UIAlertView() { Title = "Notification", Message = alert };
+                            alertView.AddButton("Ok");
+                            alertView.Show();                            
+                        }
+                        break;
+                    case UIApplicationState.Inactive:                        
+                    case UIApplicationState.Background:
+                    default:
+                        break;
                 }
-                //}
             }
         }
     }
