@@ -25,7 +25,35 @@ namespace PushNotificationDemo.Forms.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+            RegisterForPushNotificationsAsync();
+
             return base.FinishedLaunching(app, options);
+        }
+
+        private void RegisterForPushNotificationsAsync()
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            {
+                var pushSettings = UIUserNotificationSettings.GetSettingsForTypes(
+                       UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
+                       new NSSet());
+
+                UIApplication.SharedApplication.RegisterUserNotificationSettings(pushSettings);
+                UIApplication.SharedApplication.RegisterForRemoteNotifications();
+            }
+            else
+            {
+                UIRemoteNotificationType notificationTypes = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
+                UIApplication.SharedApplication.RegisterForRemoteNotificationTypes(notificationTypes);
+            }
+        }
+
+        public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+        {
+            base.RegisteredForRemoteNotifications(application, deviceToken);
+
+            NSUserDefaults.StandardUserDefaults.SetValueForKey(deviceToken, new NSString("ApnsToken"));
+            NSUserDefaults.StandardUserDefaults.Synchronize();
         }
     }
 }

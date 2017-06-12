@@ -92,6 +92,7 @@
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
+    <Compile Include="NotificationHubManageriOS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
@@ -119,6 +120,9 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Azure.NotificationHubs.iOS, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Azure.NotificationHubs.iOS.1.2.5.2\lib\Xamarin.iOS10\Xamarin.Azure.NotificationHubs.iOS.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.3.3.175\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll</HintPath>
       <Private>True</Private>
