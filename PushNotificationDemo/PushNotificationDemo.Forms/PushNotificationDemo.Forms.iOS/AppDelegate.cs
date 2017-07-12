@@ -48,13 +48,14 @@ namespace PushNotificationDemo.Forms.iOS
 
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
+            // Save APNS token to local settings to use it for registering at the Azure Notification Hub later
             NSUserDefaults.StandardUserDefaults.SetValueForKey(deviceToken, new NSString("ApnsToken"));
             NSUserDefaults.StandardUserDefaults.Synchronize();
         }
 
-        public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
         {
-            // Check to see if the dictionary has the aps key.  This is the notification payload you would have sent
+            // Check to see if the dictionary has the aps key. This is the notification payload you would have sent
             if (null != userInfo && userInfo.ContainsKey(new NSString("aps")))
             {
                 //Get the aps dictionary
@@ -73,25 +74,20 @@ namespace PushNotificationDemo.Forms.iOS
                     alert = (aps[new NSString("alert")] as NSString).ToString();
 
 
-                // Differ between the state of the current application, when it receives the push notification
-                switch (application.ApplicationState)
+                // Check state of the current application, when it receives the push notification
+                if (application.ApplicationState == UIApplicationState.Active)
                 {
                     // App is running in the foreground and notification will get depressed
                     // We have to handle the notification on our own
-                    case UIApplicationState.Active:
-                        if (!string.IsNullOrEmpty(alert))
-                        {
-                            // Manually show an alert
-                            var alertView = new UIAlertView() { Title = "Notification", Message = alert };
-                            alertView.AddButton("Ok");
-                            alertView.Show();                            
-                        }
-                        break;
-                    case UIApplicationState.Inactive:                        
-                    case UIApplicationState.Background:
-                    default:
-                        break;
+                    if (!string.IsNullOrEmpty(alert))
+                    {
+                        // Manually show an alert
+                        var alertView = new UIAlertView() { Title = "Active", Message = alert };
+                        alertView.AddButton("Ok");
+                        alertView.Show();
+                    }
                 }
+
             }
         }
     }
